@@ -1,0 +1,5 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhist_cnt =3
+let g:netrw_dirhist_1='/media/duxu/CODE/memcached/memcached-1.4.21/t'
+let g:netrw_dirhist_2='/media/duxu/CODE/memcached/memcached-1.4.21'
+let g:netrw_dirhist_3='/media/duxu/CODE/memcached/memcached-1.4.21/t'

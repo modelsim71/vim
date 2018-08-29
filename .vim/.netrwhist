@@ -1,0 +1,11 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhist_cnt =9
+let g:netrw_dirhist_1='/home/duxu/test/wxPython-3.0.0.0/samples/mainloop'
+let g:netrw_dirhist_2='/home/duxu/gitwork/cWorkShop'
+let g:netrw_dirhist_3='/home/duxu/test'
+let g:netrw_dirhist_4='/home/duxu'
+let g:netrw_dirhist_5='/home/duxu/test'
+let g:netrw_dirhist_6='/media/duxu/CODE/memcached/memcached-1.4.21/t'
+let g:netrw_dirhist_7='/home/duxu/test/t'
+let g:netrw_dirhist_8='/media/duxu/CODE/memcached/memcached-1.4.21/t'
+let g:netrw_dirhist_9='/home/duxu/workShop/of-dpa/src/ofagent/indigo/submodules/loxigen-artifacts/locitest/src'
