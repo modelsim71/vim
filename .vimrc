@@ -52,13 +52,14 @@ autocmd! bufwritepost .vimrc source ~/.vimrc
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " ====> Colors and Fonts
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Color scheme
+colorscheme desert
+set background=light
+
 " Enable syntax highlighting
 syntax enable
 syntax on
-
-" Color scheme
-colorscheme desert
-set background=dark
+hi search term=reverse ctermbg=1 guibg=DarkRed
 
 " utf-8 encoding
 set encoding=utf8
@@ -172,7 +173,7 @@ au CursorMovedI,InsertLeave * if pumvisible() == 0|silent! pclose|endif
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 set cscopequickfix=s-,c-,d-,i-,t-,e-
 if has("cscope")
-set csprg=/opt/software/cscope-15.8/bin/cscope
+set csprg=/usr/bin/cscope
 set csto=0
 set cst
 set nocsverb
@@ -215,4 +216,4 @@ map <F5> :!ctags -R --c++-kinds=+p --fields=+iaS --extra=+q <CR><ESC>
 imap <F5><ESC> :!ctags -R --c++-kinds=+p --fields=+iaS --extra=+q <CR><ESC>
 
 "按下F6重新cscope.out文件
-nmap <silent><F6> :!/opt/software/cscope-15.8/bin/cscope -Rbq <cr>
+nmap <silent><F6> :!/usr/bin/cscope -Rbq <cr>
