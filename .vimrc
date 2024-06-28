@@ -112,19 +112,41 @@ set hlsearch
 " Always show the status line
 set laststatus=2
 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" ====> Vim Plug Manager 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"call plug#begin('~/.vim/plugged')
+" Shorthand notation for plugin
+"Plug 'vim-airline/vim-airline'
+"call plug#end()
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" ====> NerdTree window
+" ====> bundle Plug Manager 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let NERDTree_title="[NERDTree]"
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+Plugin 'VundleVim/Vundle.vim'
+Plugin 'vim-airline/vim-airline'
+Plugin 'lilydjwg/colorizer'
+Plugin 'kshenoy/vim-signature'
+Plugin 'jiangmiao/auto-pairs'
+Plugin 'preservim/NERDTree'
+Plugin 'fholgado/minibufexpl.vim'
+Plugin 'grep.vim'
+Plugin 'comments.vim'
+Plugin 'supertab'
+Plugin 'OmniCppComplete'
+call vundle#end()
 
-function! NERDTree_Start()
-    exec 'NERDTree'
-endfunction
-
-function! NERDTree_IsValid()
-    return 1
-endfunction
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" ====> NerdTree
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:NERDTreeGlyphReadOnly = "RO"
+let g:NERDTreeDirArrows = 1
+let g:NERDTreeDirArrowExpandable = '▸'
+let g:NERDTreeDirArrowCollapsible = '▾'
+let g:NERDTreeGlyphReadOnly = "RO"
+let g:NERDTreeNodeDelimiter = "\u00a0"
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
