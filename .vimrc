@@ -72,18 +72,24 @@ set nobackup
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " ====> Text, tab and indent
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Use spaces instead of tab
-set expandtab
-
-" Be smart when using tabs
-set smarttab
+" 1 tab == 4 spaces
+set tabstop=4
+set softtabstop=4
 
 " 移动整行内容时，一次移动的字宽度
 set shiftwidth=4
 
-" 1 tab == 4 spaces
-"set tabstop=4
-set softtabstop=4
+" Use spaces instead of tab
+set noexpandtab
+
+" Be smart when using tabs
+set smarttab
+
+" Auto indent
+set autoindent
+
+" smart indent mode
+set smartindent
 
 " 空白或者标点处折行
 set lbr
@@ -94,14 +100,8 @@ set tw=500
 " screen wrap, don't insert EOL
 set wrap
 
-" smart indent mode
-set smartindent
-
 " C indent
 set cindent
-
-" Auto indent
-set autoindent
 
 "hight
 set hlsearch
@@ -123,22 +123,119 @@ set laststatus=2
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " ====> bundle Plug Manager 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
-Plugin 'VundleVim/Vundle.vim'
-Plugin 'vim-airline/vim-airline'
-Plugin 'lilydjwg/colorizer'
-Plugin 'kshenoy/vim-signature'
-Plugin 'jiangmiao/auto-pairs'
-Plugin 'preservim/NERDTree'
-Plugin 'fholgado/minibufexpl.vim'
-Plugin 'grep.vim'
-Plugin 'comments.vim'
-Plugin 'supertab'
-Plugin 'OmniCppComplete'
-call vundle#end()
+call plug#begin('~/.vim/plugged')
+Plug 'vim-airline/vim-airline'
+Plug 'lilydjwg/colorizer'
+Plug 'kshenoy/vim-signature'
+Plug 'jiangmiao/auto-pairs'
+Plug 'preservim/NERDTree'
+Plug 'fholgado/minibufexpl.vim'
+Plug 'vim-scripts/grep.vim'
+Plug 'vim-scripts/comments.vim'
+Plug 'vim-scripts/indentpython.vim'
+Plug 'Lokaltog/powerline', {'rtp': 'powerline/bindings/vim/'}
+Plug 'rust-lang/rust.vim'
+Plug 'dense-analysis/ale' 
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'autozimu/LanguageClient-neovim', {
+    \ 'branch': 'next',
+    \ 'do': 'bash install.sh',
+    \ }
+Plug 'junegunn/fzf'
+"Plug 'vim-scripts/supertab'
+"Plug 'Valloric/YouCompleteMe'
+"Plug 'vim-scripts/OmniCppComplete'
+call plug#end()
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" ====> pythone language
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+au BufNewFile,BufRead *.py
+    \ set tabstop=4 |
+    \ set softtabstop=4 |
+    \ set shiftwidth=4 |
+    \ set textwidth=119 |
+    \ set expandtab |
+    \ set autoindent |
+    \ set fileformat=unix
+
+highlight BadWhitespace ctermbg=red guibg=DarkRed
+au BufRead,BufNewFile *.py,*.pyw,*.c,*.h match BadWhitespace /\s\+$/
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" ====> javascript language
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+au BufNewFile,BufRead *.js, *.html, *.css
+    \ set tabstop=2 |
+    \ set softtabstop=2 |
+    \ set shiftwidth=2
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" ====> Coc setting 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  elseif (coc#rpc#ready())
+    call CocActionAsync('doHover')
+  else
+    execute '!' . &keywordprg . " " . expand('<cword>')
+  endif
+endfunction
+
+let g:LanguageClient_serverCommands = {
+    \ 'rust': ['~/.cargo/bin/rustup', 'run', 'stable', 'rls'],
+    \ 'javascript': ['/usr/local/bin/javascript-typescript-stdio'],
+    \ 'javascript.jsx': ['tcp://127.0.0.1:2089'],
+    \ 'python': ['/usr/local/bin/pyls'],
+    \ 'ruby': ['~/.rbenv/shims/solargraph', 'stdio'],
+    \ }
+
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm()
+                              \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+nmap <silent> [g <Plug>(coc-diagnostic-prev)
+nmap <silent> ]g <Plug>(coc-diagnostic-next)
+nnoremap <silent> <LEADER>h :call <SID>show_documentation()<CR>
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" ====> rust language
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:rustfmt_autosave = 1
+let g:rustfmt_command = "rustfmt" 
+let g:rust_clip_command = 'xclip -selection clipboard'
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" ====> ALE
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"let g:LanguageClient_serverCommands = {
+"\ 'rust': ['rust-analyzer'],
+"\ }
+let g:ale_linters = {
+\   'rust': ['cargo', 'clippy'],
+\}
+let g:ale_fixers = {
+\   'rust': ['cargo', 'rustfmt'],
+\}
+let g:ale_rust_cargo_use_clippy = 1
+let g:airline#extensions#ale#enabled = 1
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " ====> NerdTree
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:NERDTreeGlyphReadOnly = "RO"
@@ -167,28 +264,35 @@ let Tlist_Exit_OnlyWindow=1
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " ====> supertab plugin setting
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:SuperTabDefaultCompletionType="context"
+"let g:SuperTabRetainCompletionType = 2
+"let g:SuperTabDefaultCompletionType = "<C-X><C-O>"
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" ====> yourcomplet plugin setting
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"let g:ycm_autoclose_preview_window_after_completion=1
+"map <leader>g :YcmCompleter GoToDefinitionElseDeclaration<CR>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " ====> OmniCppComplete plugin setting
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-set nocp
-set completeopt=menu,longest,menuone "关掉只能补全时的预览窗口
-let OmniCpp_MayCompleteDot = 1 "autocomplete with .
-let OmniCpp_MayCompleteArrow = 1 "autocomplete with ->
-let OmniCpp_MayCompleteScope = 1 "autocomplete with ::
-let OmniCpp_SelectFirstItem = 2 "search namespace in this and include files
-let OmniCpp_ShowPrototypeInAbbt = 1 "show function prototype in popup window
-let OmniCpp_GlobalScopeSearch = 1 "enable the global scope search
-let OmniCpp_DisplayMode = 1 "Class scope completion mode : always show all members
-let OmniCpp_DefaultNamespaces = ["std","_GLIBCXX_STD"]
-let OmniCpp_ShowScopeInAbbt = 1 "show scope in abbreviation and remove the last column
-let OmniCpp_ShowAccess = 1
-let OmniCpp_NamespaceSearch = 2
-let OmniCpp_LocalSearchDecl = 1 " use local search function, bracket on 1st column
-let OmniCpp_DisplayMode = 1
-au BufNewFile,BufRead,BufEnter *.cpp,*.hpp set omnifunc=omni#cpp#complete#Main
-au CursorMovedI,InsertLeave * if pumvisible() == 0|silent! pclose|endif
+"set nocp
+"set completeopt=menu,longest,menuone "关掉只能补全时的预览窗口
+"let OmniCpp_MayCompleteDot = 1 "autocomplete with .
+"let OmniCpp_MayCompleteArrow = 1 "autocomplete with ->
+"let OmniCpp_MayCompleteScope = 1 "autocomplete with ::
+"let OmniCpp_SelectFirstItem = 2 "search namespace in this and include files
+"let OmniCpp_ShowPrototypeInAbbt = 1 "show function prototype in popup window
+"let OmniCpp_GlobalScopeSearch = 1 "enable the global scope search
+"let OmniCpp_DisplayMode = 1 "Class scope completion mode : always show all members
+"let OmniCpp_DefaultNamespaces = ["std","_GLIBCXX_STD"]
+"let OmniCpp_ShowScopeInAbbt = 1 "show scope in abbreviation and remove the last column
+"let OmniCpp_ShowAccess = 1
+"let OmniCpp_NamespaceSearch = 2
+"let OmniCpp_LocalSearchDecl = 1 " use local search function, bracket on 1st column
+"let OmniCpp_DisplayMode = 1
+"au BufNewFile,BufRead,BufEnter *.cpp,*.hpp set omnifunc=omni#cpp#complete#Main
+"au CursorMovedI,InsertLeave * if pumvisible() == 0|silent! pclose|endif
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " ====> cscope plugin setting
@@ -223,9 +327,6 @@ set tags=tags
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " ====> F快捷键定义
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"按下F2根据头文件内关键字补全
-imap <F2> <C-X><C-O>
-
 "按下F3自动补全代码，注意该映射语句后不能有其它字符，否则
 "按下F3后自动补全一些乱码
 imap <F3> <C-X><C-I>
@@ -237,5 +338,4 @@ nmap <silent> <F4> : WMToggle<cr>
 map <F5> :!ctags -R --c++-kinds=+p --fields=+iaS --extra=+q <CR><ESC>
 imap <F5><ESC> :!ctags -R --c++-kinds=+p --fields=+iaS --extra=+q <CR><ESC>
 
-"按下F6重新cscope.out文件
-nmap <silent><F6> :!/usr/bin/cscope -Rbq <cr>
+
